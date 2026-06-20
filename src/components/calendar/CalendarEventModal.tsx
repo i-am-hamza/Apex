@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Modal } from "@/components/ui/Modal"
+import { SlidePanel } from "@/components/ui/SlidePanel"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { useCalendarStore } from "@/store/calendarStore"
@@ -87,8 +87,28 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
 
   const selectClass = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber/60 transition-colors"
 
+  const footer = (
+    <>
+      {event && (
+        <Button variant="danger" onClick={handleDelete} size="md">
+          Delete
+        </Button>
+      )}
+      <Button variant="ghost" onClick={onClose}>Cancel</Button>
+      <Button onClick={handleSave} loading={loading} disabled={!title.trim()}>
+        {event ? "Save" : "Add Event"}
+      </Button>
+    </>
+  )
+
   return (
-    <Modal isOpen onClose={onClose} title={event ? "Edit Event" : "Add Event"} size="md">
+    <SlidePanel
+      isOpen
+      onClose={onClose}
+      title={event ? "Edit Event" : "Add Event"}
+      width="480px"
+      footer={footer}
+    >
       <div className="flex flex-col gap-4">
         <Input
           label="Title"
@@ -173,7 +193,7 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
                 className="w-7 h-7 rounded-full transition-all"
                 style={{
                   backgroundColor: c,
-                  outline: color === c ? `2px solid white` : "none",
+                  outline: color === c ? "2px solid white" : "none",
                   outlineOffset: "2px",
                   transform: color === c ? "scale(1.1)" : "scale(1)",
                 }}
@@ -192,19 +212,7 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
             placeholder="Details..."
           />
         </div>
-
-        <div className="flex gap-3 pt-2 border-t border-white/10">
-          {event && (
-            <Button variant="danger" onClick={handleDelete} size="md">
-              Delete
-            </Button>
-          )}
-          <Button variant="ghost" onClick={onClose} className="flex-1">Cancel</Button>
-          <Button onClick={handleSave} loading={loading} disabled={!title.trim()} className="flex-1">
-            {event ? "Save" : "Add Event"}
-          </Button>
-        </div>
       </div>
-    </Modal>
+    </SlidePanel>
   )
 }

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Modal } from "@/components/ui/Modal"
+import { SlidePanel } from "@/components/ui/SlidePanel"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { useTaskStore } from "@/store/taskStore"
@@ -69,8 +69,29 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
 
   const selectClass = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber/60 transition-colors"
 
+  const footer = (
+    <>
+      <Button variant="ghost" onClick={onClose}>
+        Cancel
+      </Button>
+      <Button
+        onClick={handleSave}
+        loading={loading}
+        disabled={!title.trim() || !selectedGoalId}
+      >
+        {task ? "Save Changes" : "Add Task"}
+      </Button>
+    </>
+  )
+
   return (
-    <Modal isOpen onClose={onClose} title={task ? "Edit Task" : "Add Task"} size="md">
+    <SlidePanel
+      isOpen
+      onClose={onClose}
+      title={task ? "Edit Task" : "Add Task"}
+      width="480px"
+      footer={footer}
+    >
       <div className="flex flex-col gap-4">
         {!goalId && (
           <div className="flex flex-col gap-1.5">
@@ -154,21 +175,7 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-
-        <div className="flex gap-3 pt-2 border-t border-white/10">
-          <Button variant="ghost" onClick={onClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSave}
-            loading={loading}
-            disabled={!title.trim() || !selectedGoalId}
-            className="flex-1"
-          >
-            {task ? "Save Changes" : "Add Task"}
-          </Button>
-        </div>
       </div>
-    </Modal>
+    </SlidePanel>
   )
 }

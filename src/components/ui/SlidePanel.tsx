@@ -7,6 +7,7 @@ interface SlidePanelProps {
   onClose: () => void
   title: string
   children: ReactNode
+  footer?: ReactNode
   width?: string
 }
 
@@ -15,6 +16,7 @@ export function SlidePanel({
   onClose,
   title,
   children,
+  footer,
   width = "480px",
 }: SlidePanelProps) {
   return (
@@ -22,7 +24,8 @@ export function SlidePanel({
       {isOpen && (
         <div className="fixed inset-0 z-40 flex justify-end">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0"
+            style={{ background: "rgba(0,0,0,0.85)" }}
             onClick={onClose}
           />
           <motion.div
@@ -30,10 +33,11 @@ export function SlidePanel({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            style={{ width, maxWidth: "100vw" }}
-            className="relative glass-strong border-l border-white/10 h-full flex flex-col"
+            style={{ width, maxWidth: "100vw", background: "#1a1f2e", border: "none", borderLeft: "1px solid rgba(255,255,255,0.12)" }}
+            className="relative h-full flex flex-col"
           >
-            <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/10 glass-strong z-10">
+            {/* Header */}
+            <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/10 z-10 shrink-0" style={{ background: "#1a1f2e" }}>
               <h3 className="font-semibold text-white truncate pr-2">{title}</h3>
               <button
                 onClick={onClose}
@@ -42,7 +46,19 @@ export function SlidePanel({
                 <X size={18} />
               </button>
             </div>
+
+            {/* Scrollable body */}
             <div className="flex-1 overflow-y-auto p-4 scrollbar-thin">{children}</div>
+
+            {/* Sticky footer */}
+            {footer && (
+              <div
+                className="px-6 py-4 shrink-0 flex justify-end gap-2"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                {footer}
+              </div>
+            )}
           </motion.div>
         </div>
       )}

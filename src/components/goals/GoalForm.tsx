@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Modal } from "@/components/ui/Modal"
+import { SlidePanel } from "@/components/ui/SlidePanel"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { GoalScoreSliders } from "./GoalScoreSliders"
@@ -61,8 +61,25 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
     onClose()
   }
 
+  const footer = (
+    <>
+      <Button variant="ghost" onClick={onClose}>
+        Cancel
+      </Button>
+      <Button onClick={handleSave} loading={loading} disabled={!title.trim()}>
+        {goal ? "Save Changes" : "Add Goal"}
+      </Button>
+    </>
+  )
+
   return (
-    <Modal isOpen onClose={onClose} title={goal ? "Edit Goal" : "Add Goal"} size="lg">
+    <SlidePanel
+      isOpen
+      onClose={onClose}
+      title={goal ? "Edit Goal" : "Add Goal"}
+      width="512px"
+      footer={footer}
+    >
       <div className="flex flex-col gap-6">
         {/* Identity */}
         <div className="flex flex-col gap-4">
@@ -137,16 +154,7 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
             onChange={(e) => setDueDate(e.target.value)}
           />
         </div>
-
-        <div className="flex gap-3 pt-2 border-t border-white/10">
-          <Button variant="ghost" onClick={onClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} loading={loading} disabled={!title.trim()} className="flex-1">
-            {goal ? "Save Changes" : "Add Goal"}
-          </Button>
-        </div>
       </div>
-    </Modal>
+    </SlidePanel>
   )
 }
