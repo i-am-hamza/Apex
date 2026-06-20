@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { Zap, Moon, Target, Plus } from "lucide-react"
+import { useState } from "react"
+import { Zap, Moon, Plus } from "lucide-react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/Button"
 import { TaskList } from "@/components/tasks/TaskList"
@@ -41,14 +41,14 @@ export function FocusPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Zap className="text-apex-amber" size={24} />
+          <Zap className="text-apex-violet" size={24} />
           <h1 className="text-2xl font-bold text-white">Focus Mode</h1>
         </div>
         <button
           onClick={() => setAmbientMode(!ambientMode)}
           className={clsx(
-            "p-2 rounded-lg transition-colors",
-            ambientMode ? "text-apex-amber bg-amber-500/10" : "text-apex-muted hover:text-white hover:bg-apex-elevated"
+            "p-2 rounded-xl transition-colors",
+            ambientMode ? "text-apex-violet bg-violet-500/10" : "text-slate-400 hover:text-white hover:bg-white/5"
           )}
           title="Toggle ambient mode"
         >
@@ -58,13 +58,23 @@ export function FocusPage() {
 
       {/* Streak card */}
       {focusedGoals.length > 0 && (
-        <div className="bg-gradient-to-r from-amber-600/20 to-amber-500/10 border border-amber-500/30 rounded-2xl p-6 mb-6">
-          <div className="flex items-center justify-between">
+        <div
+          className="glass-strong rounded-2xl p-6 mb-6 relative overflow-hidden"
+          style={{ boxShadow: "0 0 40px rgba(167,139,250,0.08)" }}
+        >
+          <div
+            className="absolute inset-0 opacity-10 pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse 60% 80% at 0% 50%, #A78BFA, transparent)",
+            }}
+          />
+          <div className="flex items-center justify-between relative">
             <div>
-              <div className="text-3xl font-black text-amber-400">
-                Day {focusedGoals[0]?.focus_streak ?? 0} Focus Streak 🔥
+              <div className="text-6xl font-black text-violet-300 leading-none">
+                {focusedGoals[0]?.focus_streak ?? 0}
               </div>
-              <div className="text-apex-muted text-sm mt-1">Keep the momentum going</div>
+              <div className="text-white font-semibold mt-1">Day Focus Streak 🔥</div>
+              <div className="text-apex-muted text-sm mt-0.5">Keep the momentum going</div>
             </div>
             <Button
               onClick={markedToday ? undefined : markComplete}
@@ -80,7 +90,11 @@ export function FocusPage() {
       {focusedGoals.length > 0 ? (
         <div className="flex flex-col gap-6">
           {focusedGoals.map((goal) => (
-            <div key={goal.id} className="bg-apex-card border border-apex-amber/30 rounded-2xl p-6">
+            <div
+              key={goal.id}
+              className="glass rounded-2xl p-6"
+              style={{ boxShadow: `-3px 0 0 #A78BFA` }}
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{goal.emoji}</span>
@@ -96,7 +110,7 @@ export function FocusPage() {
                 </div>
                 <button
                   onClick={() => toggleFocus(goal.id)}
-                  className="p-2 rounded-lg bg-apex-elevated text-apex-amber hover:bg-apex-elevated/80 transition-colors"
+                  className="p-2 rounded-xl bg-violet-500/10 text-apex-violet hover:bg-violet-500/20 transition-colors"
                   title="Remove from focus"
                 >
                   <Zap size={16} />
@@ -123,7 +137,7 @@ export function FocusPage() {
                 {goals.slice(0, 3).map((g) => (
                   <div
                     key={g.id}
-                    className="flex items-center justify-between p-3 bg-apex-card border border-apex-border rounded-xl"
+                    className="flex items-center justify-between p-3 glass rounded-xl"
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-xl">{g.emoji}</span>
@@ -149,7 +163,7 @@ export function FocusPage() {
       {ambientMode && (
         <button
           onClick={() => setAmbientMode(false)}
-          className="fixed bottom-20 lg:bottom-6 right-6 z-50 bg-apex-elevated border border-apex-border rounded-xl px-4 py-2 text-sm text-white shadow-lg hover:bg-apex-card transition-colors"
+          className="fixed bottom-24 right-6 z-50 glass-strong rounded-xl px-4 py-2 text-sm text-white shadow-lg hover:bg-white/10 transition-colors"
         >
           Exit ambient mode
         </button>

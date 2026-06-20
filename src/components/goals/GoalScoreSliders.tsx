@@ -68,21 +68,21 @@ export function GoalScoreSliders({ values, onChange }: GoalScoreSlidersProps) {
               <span className="text-sm font-medium text-white">
                 {s.emoji} {s.label}
               </span>
-              <span className="text-apex-amber font-bold tabular-nums">{val}</span>
+              <span className="text-apex-violet font-bold tabular-nums">{val}</span>
             </div>
             {s.note && (
-              <span className="text-xs text-apex-amber">{s.note}</span>
+              <span className="text-xs text-apex-muted">{s.note}</span>
             )}
             <input
               type="range"
               min="1"
               max="10"
               step="0.5"
-              className="w-full accent-amber-400 cursor-pointer"
+              className="w-full accent-violet-400 cursor-pointer"
               value={val}
               onChange={(e) => onChange(s.field, Number(e.target.value))}
             />
-            <div className="flex justify-between text-[10px] text-apex-muted">
+            <div className="flex justify-between text-[10px] text-slate-500">
               <span>{s.minLabel}</span>
               <span>{s.maxLabel}</span>
             </div>
@@ -90,9 +90,9 @@ export function GoalScoreSliders({ values, onChange }: GoalScoreSlidersProps) {
         )
       })}
 
-      <div className="mt-2 p-4 bg-apex-elevated rounded-xl text-center">
+      <div className="mt-2 glass rounded-2xl p-5 text-center">
         <div className="text-apex-muted text-xs mb-1">(Dream × Likely) ÷ (Time × Effort)</div>
-        <div className={`text-4xl font-black animate-score-pop ${getScoreColor(score)}`}>
+        <div className={`text-5xl font-black animate-score-pop ${getScoreColor(score)}`}>
           {score.toFixed(2)}
         </div>
         <div className="text-sm text-apex-muted mt-1">{getScoreLabel(score)}</div>

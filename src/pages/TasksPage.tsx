@@ -30,7 +30,6 @@ export function TasksPage() {
   const [groupBy, setGroupBy] = useState<GroupBy>("goal")
 
   const tasks = getAllTasks()
-  const today = new Date()
 
   const totalDoneToday = tasks.filter(
     (t) => t.completed_at && isDueToday(t.completed_at)
@@ -75,6 +74,17 @@ export function TasksPage() {
     if (rest.length) grouped["No Due Date"] = rest
   }
 
+  const pillBase = "text-xs px-2.5 py-1 rounded-full transition-colors"
+  const pillActive = "bg-apex-amber text-black font-semibold"
+  const pillInactive = "bg-white/5 text-slate-400 hover:text-white hover:bg-white/8"
+
+  const statCards = [
+    { label: "Total Tasks", value: tasks.length, icon: CheckCircle, color: "#F1F5F9" },
+    { label: "Done Today", value: totalDoneToday, icon: CheckCircle, color: "#34D399" },
+    { label: "Overdue", value: overdue, icon: AlertTriangle, color: "#F87171" },
+    { label: "Due This Week", value: dueThisWeek, icon: Calendar, color: "#F59E0B" },
+  ]
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -86,15 +96,12 @@ export function TasksPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: "Total Tasks", value: tasks.length, icon: CheckCircle, color: "text-white" },
-          { label: "Done Today", value: totalDoneToday, icon: CheckCircle, color: "text-green-400" },
-          { label: "Overdue", value: overdue, icon: AlertTriangle, color: "text-red-400" },
-          { label: "Due This Week", value: dueThisWeek, icon: Calendar, color: "text-amber-400" },
-        ].map((stat) => (
-          <div key={stat.label} className="bg-apex-card border border-apex-border rounded-xl p-4 relative overflow-hidden">
-            <stat.icon size={48} className={`absolute top-3 right-3 opacity-10 ${stat.color}`} />
-            <div className={`text-3xl font-black ${stat.color}`}>{stat.value}</div>
+        {statCards.map((stat) => (
+          <div key={stat.label} className="glass rounded-2xl p-5 relative overflow-hidden">
+            <div className="absolute top-3 right-3 opacity-10" style={{ color: stat.color }}>
+              <stat.icon size={48} />
+            </div>
+            <div className="text-3xl font-black" style={{ color: stat.color }}>{stat.value}</div>
             <div className="text-apex-muted text-sm mt-0.5">{stat.label}</div>
           </div>
         ))}
@@ -108,10 +115,7 @@ export function TasksPage() {
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={clsx(
-                "text-xs px-2.5 py-1 rounded-full transition-colors",
-                statusFilter === s ? "bg-apex-amber text-black font-medium" : "bg-apex-elevated text-apex-muted hover:text-white"
-              )}
+              className={clsx(pillBase, statusFilter === s ? pillActive : pillInactive)}
             >
               {s === "all" ? "All" : statusLabels[s as Task["status"]]}
             </button>
@@ -123,10 +127,7 @@ export function TasksPage() {
             <button
               key={p}
               onClick={() => setPriorityFilter(p)}
-              className={clsx(
-                "text-xs px-2.5 py-1 rounded-full transition-colors capitalize",
-                priorityFilter === p ? "bg-apex-amber text-black font-medium" : "bg-apex-elevated text-apex-muted hover:text-white"
-              )}
+              className={clsx(pillBase, "capitalize", priorityFilter === p ? pillActive : pillInactive)}
             >
               {p === "all" ? "All" : p}
             </button>
@@ -136,7 +137,7 @@ export function TasksPage() {
           <div className="flex items-center gap-2">
             <span className="text-xs text-apex-muted">Goal:</span>
             <select
-              className="bg-apex-elevated border border-apex-border rounded-lg px-2 py-1 text-white text-xs focus:outline-none"
+              className="bg-white/5 border border-white/10 rounded-xl px-2 py-1 text-white text-xs focus:outline-none"
               value={goalFilter}
               onChange={(e) => setGoalFilter(e.target.value)}
             >
@@ -151,10 +152,7 @@ export function TasksPage() {
               <button
                 key={g}
                 onClick={() => setGroupBy(g)}
-                className={clsx(
-                  "text-xs px-2.5 py-1 rounded-full transition-colors capitalize",
-                  groupBy === g ? "bg-apex-amber text-black font-medium" : "bg-apex-elevated text-apex-muted hover:text-white"
-                )}
+                className={clsx(pillBase, "capitalize", groupBy === g ? pillActive : pillInactive)}
               >
                 {g === "due" ? "Due Date" : `By ${g.charAt(0).toUpperCase() + g.slice(1)}`}
               </button>
@@ -178,7 +176,7 @@ export function TasksPage() {
             <div key={groupKey}>
               <div className="flex items-center gap-2 mb-3">
                 <h3 className="font-semibold text-white text-sm">{label}</h3>
-                <span className="text-xs text-apex-muted bg-apex-elevated px-1.5 py-0.5 rounded-full">
+                <span className="text-xs text-apex-muted bg-white/5 px-1.5 py-0.5 rounded-full">
                   {groupTasks.length}
                 </span>
               </div>

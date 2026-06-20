@@ -85,6 +85,8 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
     }
   }
 
+  const selectClass = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber/60 transition-colors"
+
   return (
     <Modal isOpen onClose={onClose} title={event ? "Edit Event" : "Add Event"} size="md">
       <div className="flex flex-col gap-4">
@@ -96,9 +98,9 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
         />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-300">Type</label>
+          <label className="text-sm font-medium text-slate-300">Type</label>
           <select
-            className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+            className={selectClass}
             value={eventType}
             onChange={(e) => setEventType(e.target.value as CalendarEvent["event_type"])}
           >
@@ -109,9 +111,9 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-300">Linked Goal (optional)</label>
+          <label className="text-sm font-medium text-slate-300">Linked Goal (optional)</label>
           <select
-            className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+            className={selectClass}
             value={goalId}
             onChange={(e) => { setGoalId(e.target.value); setTaskId("") }}
           >
@@ -124,9 +126,9 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
 
         {goalId && (
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-300">Linked Task (optional)</label>
+            <label className="text-sm font-medium text-slate-300">Linked Task (optional)</label>
             <select
-              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              className={selectClass}
               value={taskId}
               onChange={(e) => setTaskId(e.target.value)}
             >
@@ -139,13 +141,17 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
         )}
 
         <div className="flex items-center gap-3">
-          <label className="text-sm font-medium text-gray-300">All day</label>
+          <label className="text-sm font-medium text-slate-300">All day</label>
           <button
             type="button"
             onClick={() => setAllDay(!allDay)}
-            className={`w-10 h-5 rounded-full transition-colors relative ${allDay ? "bg-apex-amber" : "bg-apex-elevated"}`}
+            className="w-10 h-5 rounded-full transition-colors relative"
+            style={{ background: allDay ? "#F59E0B" : "rgba(255,255,255,0.1)" }}
           >
-            <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${allDay ? "translate-x-5" : "translate-x-0.5"}`} />
+            <span
+              className="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform"
+              style={{ transform: allDay ? "translateX(20px)" : "translateX(2px)" }}
+            />
           </button>
         </div>
 
@@ -157,24 +163,29 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
         </div>
 
         <div>
-          <label className="text-sm font-medium text-gray-300 block mb-2">Color</label>
+          <label className="text-sm font-medium text-slate-300 block mb-2">Color</label>
           <div className="flex gap-2">
             {COLORS.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setColor(c)}
-                className={`w-7 h-7 rounded-full transition-all ${color === c ? "ring-2 ring-white ring-offset-2 ring-offset-apex-card scale-110" : ""}`}
-                style={{ backgroundColor: c }}
+                className="w-7 h-7 rounded-full transition-all"
+                style={{
+                  backgroundColor: c,
+                  outline: color === c ? `2px solid white` : "none",
+                  outlineOffset: "2px",
+                  transform: color === c ? "scale(1.1)" : "scale(1)",
+                }}
               />
             ))}
           </div>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-300">Description (optional)</label>
+          <label className="text-sm font-medium text-slate-300">Description (optional)</label>
           <textarea
-            className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white placeholder-apex-muted text-sm focus:outline-none focus:border-apex-amber resize-none"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-apex-amber/60 transition-colors resize-none"
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -182,7 +193,7 @@ export function CalendarEventModal({ event, initialDate, onClose }: CalendarEven
           />
         </div>
 
-        <div className="flex gap-3 pt-2 border-t border-apex-border">
+        <div className="flex gap-3 pt-2 border-t border-white/10">
           {event && (
             <Button variant="danger" onClick={handleDelete} size="md">
               Delete

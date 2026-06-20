@@ -62,10 +62,10 @@ export function GoalsPage() {
             key={opt.key}
             onClick={() => setSortBy(opt.key)}
             className={clsx(
-              "text-xs px-3 py-1.5 rounded-full transition-colors font-medium",
+              "text-xs px-3 py-1.5 rounded-full transition-colors font-medium border",
               sortBy === opt.key
-                ? "bg-apex-amber text-black"
-                : "bg-apex-elevated text-apex-muted hover:text-white"
+                ? "text-blue-300 bg-blue-500/15 border-blue-500/25"
+                : "bg-white/4 border-white/6 text-slate-400 hover:text-white hover:bg-white/8"
             )}
           >
             {opt.label}
@@ -83,7 +83,7 @@ export function GoalsPage() {
           </Button>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {sorted.map((goal, idx) => (
               <motion.div

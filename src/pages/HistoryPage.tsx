@@ -23,7 +23,6 @@ export function HistoryPage() {
 
   const cutoff7 = subDays(new Date(), 7)
 
-  // Most improved / biggest drop
   const goalDeltas = goals.map((g) => {
     const snaps = getSnapshots(g.id).filter((s) => new Date(s.recorded_at) >= cutoff7)
     if (snaps.length < 2) return { goal: g, delta: 0, count: snaps.length }
@@ -35,7 +34,6 @@ export function HistoryPage() {
   const biggestDrop = [...goalDeltas].sort((a, b) => a.delta - b.delta)[0]
   const mostActive = [...goalDeltas].sort((a, b) => b.count - a.count)[0]
 
-  // Combined chart data (last 30 days, all goals)
   const cutoff30 = subDays(new Date(), 30)
   const allDays = new Set<string>()
   for (const g of goals) {
@@ -58,6 +56,8 @@ export function HistoryPage() {
     return row
   })
 
+  const highlightBorderColors = ["#34D399", "#F87171", "#F59E0B"]
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-white mb-6">History</h1>
@@ -67,6 +67,7 @@ export function HistoryPage() {
         {[
           {
             title: "Most Improved (7d)",
+            borderColor: highlightBorderColors[0],
             item: mostImproved,
             render: (d: typeof mostImproved) =>
               d && d.delta > 0 ? (
@@ -83,6 +84,7 @@ export function HistoryPage() {
           },
           {
             title: "Biggest Drop (7d)",
+            borderColor: highlightBorderColors[1],
             item: biggestDrop,
             render: (d: typeof biggestDrop) =>
               d && d.delta < 0 ? (
@@ -99,6 +101,7 @@ export function HistoryPage() {
           },
           {
             title: "Most Active (7d)",
+            borderColor: highlightBorderColors[2],
             item: mostActive,
             render: (d: typeof mostActive) =>
               d && d.count > 0 ? (
@@ -114,7 +117,11 @@ export function HistoryPage() {
               ),
           },
         ].map((card) => (
-          <div key={card.title} className="bg-apex-card border border-apex-border rounded-xl p-4">
+          <div
+            key={card.title}
+            className="glass rounded-2xl p-5"
+            style={{ borderTop: `2px solid ${card.borderColor}` }}
+          >
             <h3 className="text-xs font-semibold text-apex-muted uppercase tracking-wide">{card.title}</h3>
             {card.render(card.item as typeof mostImproved)}
           </div>
@@ -127,7 +134,7 @@ export function HistoryPage() {
         {goals.map((goal) => (
           <div
             key={goal.id}
-            className="bg-apex-card border border-apex-border rounded-xl p-4 cursor-pointer hover:border-apex-amber/40 transition-colors"
+            className="glass rounded-2xl p-4 cursor-pointer hover:border-white/20 transition-all"
             onClick={() => navigate("/goals")}
           >
             <div className="flex items-center gap-2 mb-3">
@@ -146,16 +153,22 @@ export function HistoryPage() {
 
       {/* Combined chart */}
       {goals.length > 1 && combinedData.length > 1 && (
-        <div className="bg-apex-card border border-apex-border rounded-xl p-4">
+        <div className="glass rounded-2xl p-5">
           <h2 className="text-lg font-semibold text-white mb-4">All Goals — Score Timeline</h2>
           <ResponsiveContainer width="100%" height={300}>
             <ComposedChart data={combinedData} margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
-              <XAxis dataKey="date" stroke="#6B7280" tick={{ fill: "#6B7280", fontSize: 11 }} tickLine={false} axisLine={false} />
-              <YAxis stroke="#6B7280" tick={{ fill: "#6B7280", fontSize: 11 }} tickLine={false} axisLine={false} width={30} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" opacity={1} />
+              <XAxis dataKey="date" stroke="#475569" tick={{ fill: "#475569", fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis stroke="#475569" tick={{ fill: "#475569", fontSize: 11 }} tickLine={false} axisLine={false} width={30} />
               <Tooltip
-                contentStyle={{ background: "#1F2937", border: "1px solid #374151", borderRadius: 8, fontSize: 12 }}
-                labelStyle={{ color: "#9CA3AF" }}
+                contentStyle={{
+                  background: "rgba(13,21,53,0.95)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 12,
+                  fontSize: 12,
+                  backdropFilter: "blur(20px)",
+                }}
+                labelStyle={{ color: "#94A3B8" }}
               />
               <Legend formatter={(value) => goals.find(g => g.id === value)?.title ?? value} />
               {goals.map((g) => (

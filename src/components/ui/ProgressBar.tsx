@@ -6,13 +6,20 @@ interface ProgressBarProps {
   size?: "sm" | "md"
 }
 
+const fillColors = {
+  amber: "#F59E0B",
+  green: "#34D399",
+  blue: "#60A5FA",
+  red: "#F87171",
+}
+
 export function ProgressBar({ value, color = "amber", size = "sm" }: ProgressBarProps) {
   const clamped = Math.min(100, Math.max(0, value))
 
   return (
     <div className="w-full">
       <div
-        className={clsx("w-full bg-apex-elevated rounded-full overflow-hidden", {
+        className={clsx("w-full bg-white/6 rounded-full overflow-hidden", {
           "h-1.5": size === "sm",
           "h-2.5": size === "md",
         })}
@@ -21,12 +28,8 @@ export function ProgressBar({ value, color = "amber", size = "sm" }: ProgressBar
           className={clsx("rounded-full transition-all duration-500", {
             "h-1.5": size === "sm",
             "h-2.5": size === "md",
-            "bg-amber-400": color === "amber",
-            "bg-green-400": color === "green",
-            "bg-blue-400": color === "blue",
-            "bg-red-400": color === "red",
           })}
-          style={{ width: `${clamped}%` }}
+          style={{ width: `${clamped}%`, backgroundColor: fillColors[color] }}
         />
       </div>
       {size === "md" && (

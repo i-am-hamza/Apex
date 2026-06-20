@@ -94,7 +94,7 @@ function TaskSection({ title, tasks, goalId, onReorder }: TaskSectionProps) {
       >
         {collapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
         {title}
-        <span className="text-xs font-normal text-apex-muted bg-apex-elevated px-1.5 py-0.5 rounded-full">
+        <span className="text-xs font-normal text-apex-muted bg-white/5 px-1.5 py-0.5 rounded-full">
           {tasks.length}
         </span>
       </button>
@@ -114,7 +114,7 @@ function TaskSection({ title, tasks, goalId, onReorder }: TaskSectionProps) {
               <input
                 ref={inputRef}
                 autoFocus
-                className="flex-1 bg-apex-elevated border border-apex-amber rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none placeholder-apex-muted"
+                className="flex-1 bg-white/5 border border-apex-amber/40 rounded-xl px-3 py-1.5 text-white text-sm focus:outline-none placeholder-slate-500"
                 placeholder="Task title..."
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}

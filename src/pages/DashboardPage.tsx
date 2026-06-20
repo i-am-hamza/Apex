@@ -17,10 +17,10 @@ import type { Task } from "@/types"
 import clsx from "clsx"
 
 const priorityDot: Record<Task["priority"], string> = {
-  low: "bg-green-400",
-  medium: "bg-amber-400",
-  high: "bg-orange-400",
-  urgent: "bg-red-400",
+  low: "#34D399",
+  medium: "#F59E0B",
+  high: "#FB923C",
+  urgent: "#F87171",
 }
 
 function Greeting() {
@@ -62,17 +62,17 @@ function QuickAdd() {
   }
 
   return (
-    <div className="bg-apex-card border border-apex-border rounded-xl p-4">
+    <div className="glass rounded-2xl p-5">
       <div className="flex items-center gap-2 mb-4">
         <h3 className="font-semibold text-white text-sm">Quick Add</h3>
-        <div className="flex bg-apex-elevated rounded-lg p-0.5">
+        <div className="flex bg-white/5 rounded-xl p-0.5">
           {(["goal", "task"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={clsx(
-                "text-xs px-3 py-1 rounded-md transition-colors capitalize",
-                tab === t ? "bg-apex-amber text-black font-medium" : "text-apex-muted hover:text-white"
+                "text-xs px-3 py-1 rounded-lg transition-colors capitalize",
+                tab === t ? "bg-apex-amber text-black font-semibold" : "text-slate-400 hover:text-white"
               )}
             >
               {t}
@@ -83,7 +83,7 @@ function QuickAdd() {
 
       <div className="flex flex-col gap-3">
         <input
-          className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white placeholder-apex-muted text-sm focus:outline-none focus:border-apex-amber"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-apex-amber/60 transition-colors"
           placeholder={tab === "goal" ? "Goal title..." : "Task title..."}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -105,7 +105,7 @@ function QuickAdd() {
 
         {tab === "task" && (
           <select
-            className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber/60 transition-colors"
             value={goalId}
             onChange={(e) => setGoalId(e.target.value)}
           >
@@ -137,12 +137,10 @@ export function DashboardPage() {
   const todayDone = tasks.filter((t) => t.completed_at && isDueToday(t.completed_at)).length
   const focusCount = goals.filter((g) => g.is_focus).length
 
-  // Today's tasks
   const todayTasks = tasks
     .filter((t) => (t.due_date && isDueToday(t.due_date)) || t.status === "in_progress")
     .slice(0, 5)
 
-  // Upcoming (7 days)
   const upcoming: { date: string; title: string; color: string; time?: string }[] = []
   const next7 = new Date()
   next7.setDate(next7.getDate() + 7)
@@ -174,7 +172,7 @@ export function DashboardPage() {
             { icon: "🏆", title: "Rank", desc: "Goals auto-sort by Hormozi score" },
             { icon: "⚡", title: "Focus", desc: "Pin your top goals to Focus Mode" },
           ].map((s) => (
-            <div key={s.title} className="bg-apex-card border border-apex-border rounded-xl p-4">
+            <div key={s.title} className="glass rounded-2xl p-4">
               <div className="text-2xl mb-2">{s.icon}</div>
               <div className="font-semibold text-white text-sm">{s.title}</div>
               <div className="text-apex-muted text-xs mt-1">{s.desc}</div>
@@ -189,6 +187,13 @@ export function DashboardPage() {
     )
   }
 
+  const statCards = [
+    { label: "Goals Ranked", value: goals.length, icon: Target, color: "#F59E0B", glow: "0 0 20px rgba(245,158,11,0.15)" },
+    { label: "Top Score", value: goals[0]?.score.toFixed(2) ?? "—", icon: Trophy, color: "#F59E0B", glow: "0 0 20px rgba(245,158,11,0.15)" },
+    { label: "Done Today", value: todayDone, icon: CheckCircle, color: "#34D399", glow: "0 0 20px rgba(52,211,153,0.15)" },
+    { label: "In Focus", value: focusCount, icon: Zap, color: "#A78BFA", glow: "0 0 20px rgba(167,139,250,0.15)" },
+  ]
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-white mb-6">
@@ -197,24 +202,28 @@ export function DashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: "Goals Ranked", value: goals.length, icon: Target, color: "text-apex-amber" },
-          { label: "Top Score", value: goals[0]?.score.toFixed(2) ?? "—", icon: Trophy, color: "text-apex-amber" },
-          { label: "Done Today", value: todayDone, icon: CheckCircle, color: "text-green-400" },
-          { label: "In Focus", value: focusCount, icon: Zap, color: "text-orange-400" },
-        ].map((stat) => (
-          <div key={stat.label} className="bg-apex-card border border-apex-border rounded-xl p-4 relative overflow-hidden">
-            <stat.icon size={48} className={`absolute top-3 right-3 opacity-10 ${stat.color}`} />
-            <div className={`text-3xl font-black ${stat.color}`}>{stat.value}</div>
+        {statCards.map((stat) => (
+          <div
+            key={stat.label}
+            className="glass rounded-2xl p-5 relative overflow-hidden"
+            style={{ boxShadow: stat.glow }}
+          >
+            <div
+              className="absolute top-3 right-3 opacity-10"
+              style={{ color: stat.color }}
+            >
+              <stat.icon size={48} />
+            </div>
+            <div className="text-3xl font-black" style={{ color: stat.color }}>{stat.value}</div>
             <div className="text-apex-muted text-sm mt-0.5">{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Main grid */}
-      <div className="grid lg:grid-cols-3 gap-4 mb-4">
+      <div className="grid lg:grid-cols-3 gap-5 mb-5">
         {/* Top Goals */}
-        <div className="lg:col-span-2 bg-apex-card border border-apex-border rounded-xl p-4">
+        <div className="lg:col-span-2 glass rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-white">Top Goals</h3>
             <Link to="/goals" className="text-xs text-apex-amber hover:underline flex items-center gap-1">
@@ -225,7 +234,7 @@ export function DashboardPage() {
             {goals.slice(0, 3).map((goal, idx) => {
               const badge = getRankBadge(idx + 1)
               return (
-                <div key={goal.id} className="flex items-center gap-3 p-3 bg-apex-elevated rounded-lg">
+                <div key={goal.id} className="flex items-center gap-3 p-3 bg-white/4 rounded-xl">
                   <span className="text-xl">{goal.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-white text-sm truncate">{goal.title}</div>
@@ -241,7 +250,7 @@ export function DashboardPage() {
         </div>
 
         {/* Today's Tasks */}
-        <div className="bg-apex-card border border-apex-border rounded-xl p-4">
+        <div className="glass rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-white">Today's Tasks</h3>
             <Link to="/tasks" className="text-xs text-apex-amber hover:underline flex items-center gap-1">
@@ -254,7 +263,10 @@ export function DashboardPage() {
             <div className="flex flex-col gap-2">
               {todayTasks.map((t) => (
                 <div key={t.id} className="flex items-center gap-2 text-sm">
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityDot[t.priority]}`} />
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: priorityDot[t.priority] }}
+                  />
                   <span className={clsx("text-white truncate", t.status === "done" && "line-through opacity-50")}>
                     {t.title}
                   </span>
@@ -271,9 +283,9 @@ export function DashboardPage() {
       </div>
 
       {/* Bottom grid */}
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-5">
         {/* Upcoming */}
-        <div className="bg-apex-card border border-apex-border rounded-xl p-4">
+        <div className="glass rounded-2xl p-5">
           <h3 className="font-semibold text-white mb-4">Upcoming (7 days)</h3>
           {upcoming.length === 0 ? (
             <p className="text-apex-muted text-sm text-center py-6">No upcoming events</p>

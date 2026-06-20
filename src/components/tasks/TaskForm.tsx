@@ -61,20 +61,22 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
   }
 
   const priorityColors: Record<Task["priority"], string> = {
-    low: "bg-green-400",
-    medium: "bg-amber-400",
-    high: "bg-orange-400",
-    urgent: "bg-red-400",
+    low: "#34D399",
+    medium: "#F59E0B",
+    high: "#FB923C",
+    urgent: "#F87171",
   }
+
+  const selectClass = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber/60 transition-colors"
 
   return (
     <Modal isOpen onClose={onClose} title={task ? "Edit Task" : "Add Task"} size="md">
       <div className="flex flex-col gap-4">
         {!goalId && (
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-300">Goal</label>
+            <label className="text-sm font-medium text-slate-300">Goal</label>
             <select
-              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              className={selectClass}
               value={selectedGoalId}
               onChange={(e) => setSelectedGoalId(e.target.value)}
             >
@@ -98,9 +100,9 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-300">Status</label>
+            <label className="text-sm font-medium text-slate-300">Status</label>
             <select
-              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              className={selectClass}
               value={status}
               onChange={(e) => setStatus(e.target.value as Task["status"])}
             >
@@ -111,9 +113,9 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-300">Priority</label>
+            <label className="text-sm font-medium text-slate-300">Priority</label>
             <select
-              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              className={selectClass}
               value={priority}
               onChange={(e) => setPriority(e.target.value as Task["priority"])}
             >
@@ -129,7 +131,7 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
         <div className="flex gap-2 flex-wrap">
           {(["low", "medium", "high", "urgent"] as Task["priority"][]).map((p) => (
             <div key={p} className="flex items-center gap-1.5 text-xs text-apex-muted">
-              <span className={`w-2 h-2 rounded-full ${priorityColors[p]}`} />
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: priorityColors[p] }} />
               {p}
             </div>
           ))}
@@ -143,9 +145,9 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
         />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-gray-300">Description (optional)</label>
+          <label className="text-sm font-medium text-slate-300">Description (optional)</label>
           <textarea
-            className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white placeholder-apex-muted text-sm focus:outline-none focus:border-apex-amber focus:ring-1 focus:ring-amber-500/50 transition-colors resize-none"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-apex-amber/60 focus:ring-1 focus:ring-amber-500/30 transition-colors resize-none"
             placeholder="Additional details..."
             rows={3}
             value={description}
@@ -153,7 +155,7 @@ export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
           />
         </div>
 
-        <div className="flex gap-3 pt-2 border-t border-apex-border">
+        <div className="flex gap-3 pt-2 border-t border-white/10">
           <Button variant="ghost" onClick={onClose} className="flex-1">
             Cancel
           </Button>

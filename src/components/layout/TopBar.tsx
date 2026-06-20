@@ -1,45 +1,45 @@
 import { useLocation } from "react-router-dom"
-import { Menu, GitBranch } from "lucide-react"
-import { useUIStore } from "@/store/uiStore"
 import { Badge } from "@/components/ui/Badge"
 
-const pageTitles: Record<string, string> = {
-  "/dashboard": "Dashboard",
-  "/goals": "Goals",
-  "/tasks": "Tasks",
-  "/focus": "Focus Mode",
-  "/history": "History",
-  "/calendar": "Calendar",
-  "/kanban": "Kanban",
+const pageConfig: Record<string, { title: string; color: string }> = {
+  "/dashboard": { title: "Dashboard", color: "#F59E0B" },
+  "/goals": { title: "Goals", color: "#60A5FA" },
+  "/tasks": { title: "Tasks", color: "#34D399" },
+  "/focus": { title: "Focus Mode", color: "#A78BFA" },
+  "/history": { title: "History", color: "#FB923C" },
+  "/calendar": { title: "Calendar", color: "#38BDF8" },
+  "/kanban": { title: "Kanban", color: "#F472B6" },
+  "/settings": { title: "Settings", color: "#94A3B8" },
 }
 
 export function TopBar() {
   const location = useLocation()
-  const setSidebarOpen = useUIStore((s) => s.setSidebarOpen)
-  const title = pageTitles[location.pathname] ?? "Apex"
+  const page = pageConfig[location.pathname] ?? { title: "Apex", color: "#F59E0B" }
 
   return (
-    <header className="h-14 flex-shrink-0 flex items-center justify-between px-4 bg-apex-card/80 backdrop-blur border-b border-apex-border">
+    <header
+      className="h-14 flex-shrink-0 flex items-center justify-between px-4 sticky top-0 z-30"
+      style={{
+        background: "rgba(15,12,29,0.75)",
+        backdropFilter: "blur(24px) saturate(180%)",
+        WebkitBackdropFilter: "blur(24px) saturate(180%)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
       <div className="flex items-center gap-3">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="lg:hidden text-apex-muted hover:text-white transition-colors p-1"
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-black font-black text-sm flex-shrink-0"
+          style={{ background: "linear-gradient(135deg, #F59E0B, #FBBF24)" }}
         >
-          <Menu size={20} />
-        </button>
-        <span className="font-semibold text-white">{title}</span>
+          A
+        </div>
+        <span className="font-semibold text-base" style={{ color: page.color }}>
+          {page.title}
+        </span>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <Badge color="amber" size="sm">Beta</Badge>
-        <a
-          href="https://github.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-apex-muted hover:text-white transition-colors p-1"
-        >
-          <GitBranch size={18} />
-        </a>
       </div>
     </header>
   )

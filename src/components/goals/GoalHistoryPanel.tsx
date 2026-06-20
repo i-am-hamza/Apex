@@ -41,7 +41,7 @@ export function GoalHistoryPanel({ goalId }: GoalHistoryPanelProps) {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-apex-muted border-b border-apex-border">
+                <tr className="text-apex-muted border-b border-white/10">
                   <th className="text-left pb-2 pr-3">Date</th>
                   <th className="text-right pb-2 pr-3">Score</th>
                   <th className="text-right pb-2 pr-3">Δ</th>
@@ -56,7 +56,7 @@ export function GoalHistoryPanel({ goalId }: GoalHistoryPanelProps) {
                   const prev = visible[i + 1]
                   const delta = prev ? snap.score - prev.score : null
                   return (
-                    <tr key={snap.id} className="border-b border-apex-border/30">
+                    <tr key={snap.id} className="border-b border-white/5">
                       <td className="py-2 pr-3 text-apex-muted">{fmtDateTime(snap.recorded_at)}</td>
                       <td className={`py-2 pr-3 text-right font-mono font-bold ${getScoreColor(snap.score)}`}>
                         {snap.score.toFixed(2)}

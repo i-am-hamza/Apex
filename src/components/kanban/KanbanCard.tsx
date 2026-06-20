@@ -9,11 +9,11 @@ import { fmtDate, isOverdue } from "@/utils/formatters"
 import type { Task } from "@/types"
 import clsx from "clsx"
 
-const priorityDot: Record<Task["priority"], string> = {
-  low: "bg-green-400",
-  medium: "bg-amber-400",
-  high: "bg-orange-400",
-  urgent: "bg-red-400",
+const priorityColors: Record<Task["priority"], string> = {
+  low: "#34D399",
+  medium: "#F59E0B",
+  high: "#FB923C",
+  urgent: "#F87171",
 }
 
 interface KanbanCardProps {
@@ -39,24 +39,36 @@ export function KanbanCard({ task, isDragOverlay }: KanbanCardProps) {
         style={style}
         {...attributes}
         className={clsx(
-          "bg-apex-elevated border border-apex-border rounded-lg p-3 cursor-grab active:cursor-grabbing select-none hover:border-apex-amber/40 transition-colors",
+          "glass rounded-xl p-3 cursor-grab active:cursor-grabbing select-none hover:border-white/20 transition-all",
           isDragging && !isDragOverlay && "opacity-30",
           isDragOverlay && "shadow-2xl scale-105 cursor-grabbing opacity-100"
         )}
       >
         <div className="flex items-start gap-2">
-          <div {...listeners} className="text-apex-muted hover:text-white mt-0.5 flex-shrink-0">
+          <div {...listeners} className="text-slate-500 hover:text-slate-300 mt-0.5 flex-shrink-0">
             <GripVertical size={14} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm text-white break-words">{task.title}</p>
             {goal && (
               <div className="mt-1.5">
-                <Badge color="amber" size="sm">{goal.emoji} {goal.title}</Badge>
+                <span
+                  className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
+                  style={{
+                    background: `${goal.color}18`,
+                    color: goal.color,
+                    border: `1px solid ${goal.color}30`,
+                  }}
+                >
+                  {goal.emoji} {goal.title}
+                </span>
               </div>
             )}
             <div className="flex items-center gap-2 mt-2">
-              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityDot[task.priority]}`} />
+              <span
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: priorityColors[task.priority] }}
+              />
               {task.due_date && (
                 <Badge color={isOverdue(task.due_date) ? "red" : "gray"} size="sm">
                   {fmtDate(task.due_date)}
@@ -64,7 +76,7 @@ export function KanbanCard({ task, isDragOverlay }: KanbanCardProps) {
               )}
               <button
                 onClick={(e) => { e.stopPropagation(); setEditing(true) }}
-                className="ml-auto text-apex-muted hover:text-white p-0.5 rounded transition-colors"
+                className="ml-auto text-slate-400 hover:text-white p-0.5 rounded transition-colors"
               >
                 <Pencil size={12} />
               </button>

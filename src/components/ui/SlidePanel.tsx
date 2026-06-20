@@ -21,20 +21,23 @@ export function SlidePanel({
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-40 flex justify-end">
-          <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={onClose}
+          />
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             style={{ width, maxWidth: "100vw" }}
-            className="relative bg-apex-card border-l border-apex-border h-full flex flex-col"
+            className="relative glass-strong border-l border-white/10 h-full flex flex-col"
           >
-            <div className="sticky top-0 flex items-center justify-between p-4 border-b border-apex-border bg-apex-card z-10">
+            <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/10 glass-strong z-10">
               <h3 className="font-semibold text-white truncate pr-2">{title}</h3>
               <button
                 onClick={onClose}
-                className="text-apex-muted hover:text-white transition-colors p-1 rounded-lg hover:bg-apex-elevated flex-shrink-0"
+                className="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5 flex-shrink-0"
               >
                 <X size={18} />
               </button>

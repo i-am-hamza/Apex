@@ -67,7 +67,7 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
         {/* Identity */}
         <div className="flex flex-col gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-300 block mb-2">Emoji</label>
+            <label className="text-sm font-medium text-slate-300 block mb-2">Emoji</label>
             <div className="grid grid-cols-10 gap-1">
               {EMOJIS.map((e) => (
                 <button
@@ -76,8 +76,8 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
                   onClick={() => setEmoji(e)}
                   className={`text-xl p-1.5 rounded-lg transition-all ${
                     emoji === e
-                      ? "ring-2 ring-apex-amber bg-apex-elevated"
-                      : "hover:bg-apex-elevated"
+                      ? "ring-2 ring-apex-amber bg-white/8"
+                      : "hover:bg-white/5"
                   }`}
                 >
                   {e}
@@ -95,7 +95,7 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
           />
 
           <div>
-            <label className="text-sm font-medium text-gray-300 block mb-2">Color</label>
+            <label className="text-sm font-medium text-slate-300 block mb-2">Color</label>
             <div className="flex gap-2">
               {COLORS.map((c) => (
                 <button
@@ -103,7 +103,7 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
                   type="button"
                   onClick={() => setColor(c)}
                   className={`w-7 h-7 rounded-full transition-all ${
-                    color === c ? "ring-2 ring-white ring-offset-2 ring-offset-apex-card scale-110" : ""
+                    color === c ? "ring-2 ring-white ring-offset-2 ring-offset-[#0D1535] scale-110" : ""
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -121,9 +121,9 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
         {/* Details */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-300">Description (optional)</label>
+            <label className="text-sm font-medium text-slate-300">Description (optional)</label>
             <textarea
-              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white placeholder-apex-muted text-sm focus:outline-none focus:border-apex-amber focus:ring-1 focus:ring-amber-500/50 transition-colors resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-apex-amber/60 focus:ring-1 focus:ring-amber-500/30 transition-colors resize-none"
               placeholder="Describe your goal..."
               rows={3}
               value={description}
@@ -138,7 +138,7 @@ export function GoalForm({ goal, onClose }: GoalFormProps) {
           />
         </div>
 
-        <div className="flex gap-3 pt-2 border-t border-apex-border">
+        <div className="flex gap-3 pt-2 border-t border-white/10">
           <Button variant="ghost" onClick={onClose} className="flex-1">
             Cancel
           </Button>

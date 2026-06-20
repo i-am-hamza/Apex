@@ -12,6 +12,7 @@ import {
 } from "recharts"
 import { useGoalStore } from "@/store/goalStore"
 import { fmtShort } from "@/utils/formatters"
+
 interface ChartPayloadItem {
   payload: {
     date: string
@@ -44,9 +45,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   const delta = prev !== undefined ? d.score - prev : null
 
   return (
-    <div className="bg-apex-elevated border border-apex-border rounded-lg p-3 text-xs shadow-xl">
+    <div className="glass-strong rounded-xl p-3 text-xs shadow-xl">
       <div className="text-apex-muted mb-1">{d.date}</div>
-      <div className="text-apex-amber font-bold text-base mb-1">{d.score.toFixed(2)}</div>
+      <div className="text-apex-violet font-bold text-base mb-1">{d.score.toFixed(2)}</div>
       {delta !== null && idx > 0 && (
         <div className={delta >= 0 ? "text-green-400" : "text-red-400"}>
           {delta >= 0 ? "▲" : "▼"} {Math.abs(delta).toFixed(2)}
@@ -72,7 +73,6 @@ export function GoalHistoryChart({ goalId, currentScore }: GoalHistoryChartProps
 
   const filtered = snapshots.filter((s) => new Date(s.recorded_at) >= cutoff)
 
-  // Deduplicate by day — keep latest per day
   const byDay = new Map<string, (typeof filtered)[0]>()
   for (const s of filtered) {
     const day = fmtShort(s.recorded_at)
@@ -101,7 +101,7 @@ export function GoalHistoryChart({ goalId, currentScore }: GoalHistoryChartProps
   }
 
   return (
-    <div>
+    <div className="glass rounded-2xl p-4">
       <div className="flex gap-2 mb-3">
         {DAYS.map((d) => (
           <button
@@ -109,8 +109,8 @@ export function GoalHistoryChart({ goalId, currentScore }: GoalHistoryChartProps
             onClick={() => setDays(d)}
             className={`text-xs px-2.5 py-1 rounded-full transition-colors ${
               days === d
-                ? "bg-apex-amber text-black font-semibold"
-                : "text-apex-muted hover:text-white hover:bg-apex-elevated"
+                ? "glass-strong text-apex-violet font-semibold border border-apex-violet/30"
+                : "text-apex-muted hover:text-white hover:bg-white/5"
             }`}
           >
             {d}d
@@ -120,22 +120,22 @@ export function GoalHistoryChart({ goalId, currentScore }: GoalHistoryChartProps
       <ResponsiveContainer width="100%" height={220}>
         <ComposedChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
           <defs>
-            <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.15} />
-              <stop offset="95%" stopColor="#F59E0B" stopOpacity={0} />
+            <linearGradient id="scoreGradViolet" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#A78BFA" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#A78BFA" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.5} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" opacity={1} />
           <XAxis
             dataKey="date"
-            stroke="#6B7280"
-            tick={{ fill: "#6B7280", fontSize: 11 }}
+            stroke="#475569"
+            tick={{ fill: "#475569", fontSize: 11 }}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke="#6B7280"
-            tick={{ fill: "#6B7280", fontSize: 11 }}
+            stroke="#475569"
+            tick={{ fill: "#475569", fontSize: 11 }}
             tickLine={false}
             axisLine={false}
             width={30}
@@ -145,17 +145,17 @@ export function GoalHistoryChart({ goalId, currentScore }: GoalHistoryChartProps
             y={currentScore}
             stroke="#fff"
             strokeDasharray="4 4"
-            strokeOpacity={0.3}
-            label={{ value: "Now", fill: "#9CA3AF", fontSize: 10, position: "insideTopRight" }}
+            strokeOpacity={0.2}
+            label={{ value: "Now", fill: "#475569", fontSize: 10, position: "insideTopRight" }}
           />
-          <Area type="monotone" dataKey="score" fill="url(#scoreGrad)" stroke="none" />
+          <Area type="monotone" dataKey="score" fill="url(#scoreGradViolet)" stroke="none" />
           <Line
             type="monotone"
             dataKey="score"
-            stroke="#F59E0B"
+            stroke="#A78BFA"
             strokeWidth={2}
-            dot={{ r: 3, fill: "#F59E0B", strokeWidth: 0 }}
-            activeDot={{ r: 5, fill: "#F59E0B" }}
+            dot={{ r: 3, fill: "#A78BFA", strokeWidth: 0 }}
+            activeDot={{ r: 5, fill: "#A78BFA" }}
           />
         </ComposedChart>
       </ResponsiveContainer>

@@ -19,11 +19,11 @@ interface TaskCardProps {
   dragAttributes?: Record<string, any>
 }
 
-const priorityDot: Record<Task["priority"], string> = {
-  low: "bg-green-400",
-  medium: "bg-amber-400",
-  high: "bg-orange-400",
-  urgent: "bg-red-400",
+const priorityColors: Record<Task["priority"], string> = {
+  low: "#34D399",
+  medium: "#F59E0B",
+  high: "#FB923C",
+  urgent: "#F87171",
 }
 
 export function TaskCard({
@@ -54,12 +54,12 @@ export function TaskCard({
 
   return (
     <>
-      <div className="flex items-center gap-2 p-3 bg-apex-card border border-apex-border rounded-lg hover:border-apex-border/80 transition-colors group">
+      <div className="glass rounded-xl p-3 flex items-start gap-3 group">
         {showDragHandle && (
           <div
             {...dragListeners}
             {...dragAttributes}
-            className="text-apex-muted hover:text-white cursor-grab active:cursor-grabbing flex-shrink-0"
+            className="text-slate-500 hover:text-slate-300 cursor-grab active:cursor-grabbing flex-shrink-0 mt-0.5"
           >
             <GripVertical size={14} />
           </div>
@@ -67,12 +67,13 @@ export function TaskCard({
 
         <button
           onClick={toggleDone}
-          className={clsx(
-            "w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors",
-            isDone
-              ? "bg-green-500 border-green-500"
-              : "border-apex-border hover:border-apex-amber"
-          )}
+          className="w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-all mt-0.5"
+          style={isDone ? {
+            background: `linear-gradient(135deg, ${priorityColors[task.priority]}, ${priorityColors[task.priority]}aa)`,
+            borderColor: priorityColors[task.priority],
+          } : {
+            borderColor: "rgba(255,255,255,0.2)",
+          }}
         >
           {isDone && (
             <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 12 12">
@@ -83,12 +84,13 @@ export function TaskCard({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className={clsx("text-sm text-white truncate", isDone && "line-through opacity-50")}
-            >
+            <span className={clsx("text-sm text-white truncate", isDone && "line-through opacity-50")}>
               {task.title}
             </span>
-            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityDot[task.priority]}`} />
+            <span
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ backgroundColor: priorityColors[task.priority] }}
+            />
           </div>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             {task.due_date && !isDone && (
@@ -107,13 +109,13 @@ export function TaskCard({
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
           <button
             onClick={() => setEditing(true)}
-            className="p-1 text-apex-muted hover:text-white rounded transition-colors"
+            className="p-1 text-slate-400 hover:text-white rounded transition-colors"
           >
             <Pencil size={13} />
           </button>
           <button
             onClick={handleDelete}
-            className="p-1 text-apex-muted hover:text-red-400 rounded transition-colors"
+            className="p-1 text-slate-400 hover:text-red-400 rounded transition-colors"
           >
             <Trash2 size={13} />
           </button>

@@ -39,32 +39,30 @@ export function Modal({
     <AnimatePresence>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-[10vh] bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-[10vh]"
+          style={{ background: "rgba(7,18,35,0.80)", backdropFilter: "blur(16px)" }}
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
+            initial={{ scale: 0.95, opacity: 0, y: 8 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 8 }}
             transition={{ duration: 0.15 }}
             onClick={(e) => e.stopPropagation()}
-            className={clsx(
-              "bg-apex-card border border-apex-border rounded-2xl shadow-2xl w-full p-6 mb-4",
-              sizeMap[size]
-            )}
+            className={clsx("glass-strong rounded-2xl shadow-2xl w-full mb-4", sizeMap[size])}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between px-6 pt-6 pb-0">
               <h2 className="font-semibold text-lg text-white">{title}</h2>
               {showClose && (
                 <button
                   onClick={onClose}
-                  className="text-apex-muted hover:text-white transition-colors p-1 rounded-lg hover:bg-apex-elevated"
+                  className="text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
                 >
                   <X size={18} />
                 </button>
               )}
             </div>
-            {children}
+            <div className="p-6">{children}</div>
           </motion.div>
         </div>
       )}
