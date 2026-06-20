@@ -1,0 +1,172 @@
+import { useState } from "react"
+import { Modal } from "@/components/ui/Modal"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { useTaskStore } from "@/store/taskStore"
+import { useGoalStore } from "@/store/goalStore"
+import { useUIStore } from "@/store/uiStore"
+import type { Task } from "@/types"
+
+interface TaskFormProps {
+  task?: Task
+  goalId?: string
+  onClose: () => void
+}
+
+export function TaskForm({ task, goalId, onClose }: TaskFormProps) {
+  const { addTask, updateTask } = useTaskStore()
+  const goals = useGoalStore((s) => s.goals)
+  const addToast = useUIStore((s) => s.addToast)
+
+  const [title, setTitle] = useState(task?.title ?? "")
+  const [description, setDescription] = useState(task?.description ?? "")
+  const [selectedGoalId, setSelectedGoalId] = useState(task?.goal_id ?? goalId ?? "")
+  const [status, setStatus] = useState<Task["status"]>(task?.status ?? "todo")
+  const [priority, setPriority] = useState<Task["priority"]>(task?.priority ?? "medium")
+  const [dueDate, setDueDate] = useState(task?.due_date ?? "")
+  const [loading, setLoading] = useState(false)
+
+  const handleSave = () => {
+    if (!title.trim() || !selectedGoalId) return
+    setLoading(true)
+
+    const allTasks = useTaskStore.getState().getAllTasks()
+    const goalTasks = allTasks.filter((t) => t.goal_id === selectedGoalId)
+
+    if (task) {
+      updateTask(task.id, {
+        title: title.trim(),
+        description: description.trim() || undefined,
+        goal_id: selectedGoalId,
+        status,
+        priority,
+        due_date: dueDate || undefined,
+      })
+      addToast("success", "Task updated!")
+    } else {
+      addTask({
+        title: title.trim(),
+        description: description.trim() || undefined,
+        goal_id: selectedGoalId,
+        status,
+        priority,
+        due_date: dueDate || undefined,
+        sort_order: goalTasks.length,
+      })
+      addToast("success", "Task added!")
+    }
+
+    setLoading(false)
+    onClose()
+  }
+
+  const priorityColors: Record<Task["priority"], string> = {
+    low: "bg-green-400",
+    medium: "bg-amber-400",
+    high: "bg-orange-400",
+    urgent: "bg-red-400",
+  }
+
+  return (
+    <Modal isOpen onClose={onClose} title={task ? "Edit Task" : "Add Task"} size="md">
+      <div className="flex flex-col gap-4">
+        {!goalId && (
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-gray-300">Goal</label>
+            <select
+              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              value={selectedGoalId}
+              onChange={(e) => setSelectedGoalId(e.target.value)}
+            >
+              <option value="">Select a goal...</option>
+              {goals.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.emoji} {g.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <Input
+          label="Title"
+          placeholder="What needs to be done?"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-gray-300">Status</label>
+            <select
+              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as Task["status"])}
+            >
+              <option value="todo">Todo</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-gray-300">Priority</label>
+            <select
+              className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-apex-amber"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value as Task["priority"])}
+            >
+              {(["low", "medium", "high", "urgent"] as Task["priority"][]).map((p) => (
+                <option key={p} value={p}>
+                  {p.charAt(0).toUpperCase() + p.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex gap-2 flex-wrap">
+          {(["low", "medium", "high", "urgent"] as Task["priority"][]).map((p) => (
+            <div key={p} className="flex items-center gap-1.5 text-xs text-apex-muted">
+              <span className={`w-2 h-2 rounded-full ${priorityColors[p]}`} />
+              {p}
+            </div>
+          ))}
+        </div>
+
+        <Input
+          label="Due Date (optional)"
+          type="datetime-local"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-gray-300">Description (optional)</label>
+          <textarea
+            className="w-full bg-apex-elevated border border-apex-border rounded-lg px-3 py-2 text-white placeholder-apex-muted text-sm focus:outline-none focus:border-apex-amber focus:ring-1 focus:ring-amber-500/50 transition-colors resize-none"
+            placeholder="Additional details..."
+            rows={3}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+
+        <div className="flex gap-3 pt-2 border-t border-apex-border">
+          <Button variant="ghost" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            loading={loading}
+            disabled={!title.trim() || !selectedGoalId}
+            className="flex-1"
+          >
+            {task ? "Save Changes" : "Add Task"}
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
